@@ -3,13 +3,15 @@ import pydirectinput
 import re
 import time
 import os
-import clipboard
 
 
 # main function
 def main():
-    start_no = int(input('파일 시작 번호를 입력하세요: '))
-    end_no = int(input('파일 끝 번호를 입력하세요: '))
+    start_no = int(input('프로젝트 시작 번호를 입력하세요: '))
+    end_no = int(input('프로젝트 끝 번호를 입력하세요: '))
+    file_count = int(input('렌더링될 이미지 파일 개수를 입력하세요: '))
+    estimated_min = int(input('예상되는 렌더링 시간(분)을 입력하세요: '))
+
     folder_name = input('폴더 이름을 입력하세요: ')
 
     path = "C:\\Users\\arcle\\OneDrive\\PROJECT\\PROJECT 2023\\MoDeF\\"
@@ -24,7 +26,7 @@ def main():
 
     print('5초 뒤 실행 시작합니다.')
     time.sleep(5)
-    result = auto_export_by_cursor(start_no, end_no, save_path)
+    result = auto_export_by_cursor(start_no, end_no, estimated_min, file_count, save_path)
 
     if result is False:
         print('비정상적으로 종료되었습니다.')
@@ -51,7 +53,7 @@ def file_split() -> [[int]]:
 
 
 # 커서 위치에 따라 정해진 동작 수행 하는 함수
-def auto_export_by_cursor(start_no: int, end_no: int, save_path) -> bool:
+def auto_export_by_cursor(start_no: int, end_no: int, estimated_min: int, file_cnt: int, save_path) -> bool:
     current_no = start_no
 
     while current_no <= end_no:
@@ -123,7 +125,8 @@ def auto_export_by_cursor(start_no: int, end_no: int, save_path) -> bool:
         print('7. wait until the dialog disappears')
 
         # 렌더링 시간 설정
-        estimated_sec = 60 * 1 * 1
+        plus_sec = 60 * 10
+        estimated_sec = 60 * estimated_min * file_cnt + plus_sec
         time.sleep(estimated_sec)
 
         # 8. repeat to 1
