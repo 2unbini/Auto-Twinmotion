@@ -10,12 +10,21 @@ import clipboard
 def main():
     start_no = int(input('파일 시작 번호를 입력하세요: '))
     end_no = int(input('파일 끝 번호를 입력하세요: '))
-    open_path = input('오픈할 파일의 절대 경로를 입력하세요: ')
-    save_path = input('저장할 파일의 절대 경로를 입력하세요: ')
+    folder_name = input('폴더 이름을 입력하세요: ')
+
+    path = "C:\\Users\\arcle\\OneDrive\\PROJECT\\PROJECT 2023\\MoDeF\\"
+    save_path = path + folder_name
+
+    if folder_name == "":
+        print('비정상적으로 종료되었습니다.')
+        return
+
+    if save_path[len(save_path) - 1] != '\\':
+        save_path += '\\'
 
     print('5초 뒤 실행 시작합니다.')
     time.sleep(5)
-    result = auto_export_by_cursor(start_no, end_no, open_path, save_path)
+    result = auto_export_by_cursor(start_no, end_no, save_path)
 
     if result is False:
         print('비정상적으로 종료되었습니다.')
@@ -42,7 +51,7 @@ def file_split() -> [[int]]:
 
 
 # 커서 위치에 따라 정해진 동작 수행 하는 함수
-def auto_export_by_cursor(start_no: int, end_no: int, open_path, save_path) -> bool:
+def auto_export_by_cursor(start_no: int, end_no: int, save_path) -> bool:
     current_no = start_no
 
     while current_no <= end_no:
@@ -66,40 +75,23 @@ def auto_export_by_cursor(start_no: int, end_no: int, open_path, save_path) -> b
         pyautogui.press('down')
         time.sleep(0.5)
 
-        # 2-2. select file name
-        print('2-2. select file name')
-
-        pyautogui.keyDown('shift')
-        pyautogui.keyDown('fn')
-        pyautogui.press('left')
-        pyautogui.keyUp('fn')
-        pyautogui.keyUp('shift')
-        time.sleep(0.5)
-
-        # 2-3. copy file name
-        print('2-3. copy file name')
-
-        with pyautogui.hold('ctrl'):
-            pyautogui.press('c')
-        time.sleep(0.5)
-
-        # 2-4. open file
+        # 2-2. open file
         print('2-4. open file')
-
         pyautogui.press('enter')
-        time.sleep(5)
-        # check if alert appeared or not
-        # if alert appeared:
-        #     return False
+        time.sleep(3)
+
+        # 2-3. save no button if dialog appeared
+        print('2-5. save no button if dialog appeared')
+        pydirectinput.click(x=cursor_pos[0][0], y=cursor_pos[0][1])
+
+        # save no 버튼 누른 후 로딩 시간
+        load_sec = 5
+        time.sleep(load_sec)
 
         # 3. make folder named after the one that copied on the clipboard
         print('3. make folder named after the one that copied on the clipboard')
-
-        folder_name = clipboard.paste()
-        if not folder_name:
-            return False
-        directory = folder_name + str(current_no)
-        print(directory)
+        directory = save_path + str(current_no)
+        # print(directory)
         try:
             if not os.path.exists(directory):
                 os.makedirs(directory)
@@ -109,33 +101,30 @@ def auto_export_by_cursor(start_no: int, end_no: int, open_path, save_path) -> b
 
         # 4. click export panel
         print('4. click export panel')
-        print(cursor_pos)
-        pydirectinput.click(x=cursor_pos[0][0], y=cursor_pos[0][1])
+        pydirectinput.click(x=cursor_pos[1][0], y=cursor_pos[1][1])
         time.sleep(3)
 
         # 5. click export button
         print('5. click export button')
-
-        pydirectinput.click(x=cursor_pos[1][0], y=cursor_pos[1][1])
+        pydirectinput.click(x=cursor_pos[2][0], y=cursor_pos[2][1])
         time.sleep(3)
 
         # 6. search file to export and press enter
         print('6. search file to export and press enter')
 
         pyautogui.write(directory, interval=0.05)
-        time.sleep(0.5)
-        pyautogui.press('down')
-        time.sleep(0.5)
+        time.sleep(1)
         pyautogui.press('enter')
-        time.sleep(0.5)
+        time.sleep(1)
         pyautogui.press('enter')
-        time.sleep(5)
+        time.sleep(3)
 
         # 7. wait until the dialog disappears
         print('7. wait until the dialog disappears')
 
-        while pyautogui.locateOnScreen('exporting.png') is not None:
-            continue
+        # 렌더링 시간 설정
+        estimated_sec = 60 * 1 * 1
+        time.sleep(estimated_sec)
 
         # 8. repeat to 1
         print('No.%d 완료.' % current_no)
