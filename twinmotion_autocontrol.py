@@ -12,9 +12,9 @@ def main():
     end_no = int(input('파일 끝 번호를 입력하세요: '))
     path = input('폴더의 절대 경로를 입력하세요: ')
 
-    if path[len(path) - 1] != '/':
-        path += '/'
-        print(path)
+    # if path[len(path) - 1] != '/':
+    #     path += '/'
+    #     print(path)
 
     print('5초 뒤 실행 시작합니다.')
     time.sleep(5)
@@ -44,7 +44,8 @@ def auto_export_by_cursor(start_no: int, end_no: int, save_path) -> bool:
         # 2-1. search file to open
         print('2-1. search file to open')
 
-        pyautogui.write(str(current_no), interval=0.25)
+        file_name = save_path + str(current_no)
+        pyautogui.write(file_name, interval=0.05)
         time.sleep(0.5)
         pyautogui.press('down')
         time.sleep(0.5)
@@ -81,7 +82,8 @@ def auto_export_by_cursor(start_no: int, end_no: int, save_path) -> bool:
         folder_name = clipboard.paste()
         if not folder_name:
             return False
-        directory = save_path + folder_name
+        directory = folder_name + str(current_no)
+        print(directory)
         try:
             if not os.path.exists(directory):
                 os.makedirs(directory)
@@ -92,27 +94,28 @@ def auto_export_by_cursor(start_no: int, end_no: int, save_path) -> bool:
         # 4. click export panel
         print('4. click export panel')
 
-        export_panel = pyautogui.locateCenterOnScreen('./screens/export_panel.png')
+        export_panel = pyautogui.locateCenterOnScreen('export_panel')
+        print(export_panel)
         if export_panel is None:
             return False
-        pyautogui.click(export_panel)
-        # pydirectinput.click(export_panel)
-        time.sleep(1)
+        # pyautogui.click(export_panel)
+        pydirectinput.click(export_panel)
+        time.sleep(5)
 
         # 5. click export button
         print('5. click export button')
 
-        export_button = pyautogui.locateCenterOnScreen('./screens/export_button.png')
+        export_button = pyautogui.locateCenterOnScreen('export_button')
         if export_button is None:
             return False
-        pyautogui.click(export_button)
-        # pydirectinput.click(export_button)
+        # pyautogui.click(export_button)
+        pydirectinput.click(export_button)
         time.sleep(5)
 
         # 6. search file to export and press enter
         print('6. search file to export and press enter')
 
-        pyautogui.write(str(current_no), interval=0.25)
+        pyautogui.write(directory, interval=0.05)
         time.sleep(0.5)
         pyautogui.press('down')
         time.sleep(0.5)
@@ -122,7 +125,7 @@ def auto_export_by_cursor(start_no: int, end_no: int, save_path) -> bool:
         # 7. wait until the dialog disappears
         print('7. wait until the dialog disappears')
 
-        while not pyautogui.locateOnScreen('./screens/exporting.png') is None:
+        while not pyautogui.locateOnScreen('exporting') is None:
             continue
         time.sleep(5)
 
