@@ -14,6 +14,7 @@ def main():
 
     folder_name = input('폴더 이름을 입력하세요: ')
 
+	# 기본 경로
     path = "C:\\Users\\arcle\\OneDrive\\PROJECT\\PROJECT 2023\\MoDeF\\"
     save_path = path + folder_name
 
@@ -32,6 +33,16 @@ def main():
         print('비정상적으로 종료되었습니다.')
     else:
         print('정상적으로 종료되었습니다.')
+    
+    # 트윈모션 종료 대기 시간 설정
+    sleep_time = 10
+    
+    # 9. quit twin motion when finished
+    print("%d초 뒤에 Twin Motion 프로그램이 종료됩니다." % sleep_time)
+    time.sleep(sleep_time)
+    
+    with pyautogui.hold('ctrl'):
+            pyautogui.press('q')
 
 
 # position.txt 파일에 저장된 커서 위치 정수 배열로 쪼개는 함수
@@ -58,6 +69,10 @@ def auto_export_by_cursor(start_no: int, end_no: int, estimated_min: int, file_c
 
     while current_no <= end_no:
         cursor_pos = file_split()
+        
+        # 커서 위치가 3개만 입력되어야 함(23.06.21 기준)
+        if len(cursor_pos) != 3:
+            return False
 
         print('No. %d 진행중...' % current_no)
 
