@@ -143,6 +143,16 @@ def auto_export_by_cursor(start_no: int, end_no: int, estimated_min: int, file_c
         plus_sec = 60 * 10
         estimated_sec = 60 * estimated_min * file_cnt + plus_sec
         time.sleep(estimated_sec)
+        
+        # 8. remove lock screen
+        print('8. remove lock screen after 10 sec')
+        time.sleep(10)
+        
+        password = 1210
+        pyautogui.press('enter')
+        pyautogui.write(password, interval=0.05)
+        pyautogui.press('enter')
+        time.sleep(30)
 
         # 8. repeat to 1
         print('No.%d 완료.' % current_no)
