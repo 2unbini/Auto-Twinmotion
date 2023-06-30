@@ -95,14 +95,14 @@ def auto_export_by_cursor(start_no: int, end_no: int, estimated_min: int, file_c
         # 2-2. open file
         print('2-4. open file')
         pyautogui.press('enter')
-        time.sleep(30)
+        time.sleep(3)
 
         # 2-3. save no button if dialog appeared
         print('2-5. save no button if dialog appeared')
         pydirectinput.click(x=cursor_pos[0][0], y=cursor_pos[0][1])
 
         # save no 버튼 누른 후 로딩 시간
-        load_sec = 30
+        load_sec = 5
         time.sleep(load_sec)
 
         # 3. make folder named after the one that copied on the clipboard
